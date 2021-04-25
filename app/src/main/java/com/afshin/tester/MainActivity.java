@@ -419,7 +419,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    return;
 //                }
 
-                String uri = SERVER_URL + "printText";
+                String uri = SERVER_URL + "printAndroid";
                 updateButtonState(false);
                 JSONObject jsonObject = new JSONObject();
                 try {
