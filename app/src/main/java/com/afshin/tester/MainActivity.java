@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 if (requestCode == 555){
 
-                    allJsonObject.put("printerID", printerID);
+                    allJsonObject.put(Constants.PRINTER_DATA, printerID);
                     JSONArray jsonArray = new JSONArray();
 
 
@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     String url = SERVER_URL + "printImage";
 
                     JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("printerID", printerID);
+                    jsonObject.put(Constants.PRINTER_DATA, printerID);
                     jsonObject.put("image", base64Image);
                     jsonObject.put("alignment", "Center");
                     jsonObject.put("paperSize", "" + paperSize);
@@ -337,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     String[] ids = new String[count];
                                     for (int index = 0; index < count; index++) {
                                         JSONObject printer = printers.optJSONObject(index);
-                                        String printerID = printer.getString("printerID");
+                                        String printerID = printer.getString(Constants.PRINTER_DATA);
                                         ids[index] = printerID;
                                     }
 
@@ -423,7 +423,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 updateButtonState(false);
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    jsonObject.put("printerID", printerID);
+                    jsonObject.put(Constants.PRINTER_DATA, printerID);
                     jsonObject.put("text", "After reinstall you can again write files to that directory for which you do not need any permission.");
                     jsonObject.put("fontSize", fontSize);
                     jsonObject.put("paperSize", "" + paperSize);
@@ -471,7 +471,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String uri = SERVER_URL + "getPrinterStatus";
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    jsonObject.put("printerID", printerID);
+                    jsonObject.put(Constants.PRINTER_DATA, printerID);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -503,7 +503,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String uri = SERVER_URL + "sendCommand";
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    jsonObject.put("printerID", printerID);
+                    jsonObject.put(Constants.PRINTER_DATA, printerID);
                     jsonObject.put("lineFeed", "" + lineFeed);
                     jsonObject.put("cutPaper", "" + cutPaper);
                     jsonObject.put("openDrawer", "" + openDrawer);
