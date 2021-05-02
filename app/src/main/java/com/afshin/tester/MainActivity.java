@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Spinner spnPrinterIds;
     Spinner spnPaperSize;
     EditText edtFontSize;
+    EditText edtDiscoverType;
     CheckBox chkBold;
     CheckBox chkItalic;
     CheckBox chkUnderline;
@@ -103,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         spnPrinterIds = findViewById(R.id.spnPrinterIds);
         spnPaperSize = findViewById(R.id.spnPaperSize);
         edtFontSize = findViewById(R.id.edtFontSize);
+        edtDiscoverType = findViewById(R.id.edtDiscoverType);
         chkBold = findViewById(R.id.chkBold);
         chkUnderline = findViewById(R.id.chkUnderline);
         chkItalic = findViewById(R.id.chkItalic);
@@ -317,11 +319,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if (id == R.id.btnDiscover) {
+
+            JSONObject jsonObject = new JSONObject();
+            try {
+                if (edtDiscoverType.getText().toString().isEmpty()){
+                    jsonObject.put(Constants.PRINTER_TO_DISCOVER, "0");
+                } else {
+                    jsonObject.put(Constants.PRINTER_TO_DISCOVER, edtDiscoverType.getText().toString());
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
             updateButtonState(false);
             String uri = SERVER_URL + "discoverPrinters";
             AndroidNetworking.post(uri)
                     .setTag(this)
                     .setPriority(Priority.HIGH)
+                    .addJSONObjectBody(jsonObject)
                     .build()
                     .getAsString(new StringRequestListener() {
                         @Override
