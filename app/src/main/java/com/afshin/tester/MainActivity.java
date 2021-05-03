@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btnPrintText;
     Button btnStatus;
     Button btnCommand;
+    Button btnBarcode;
     Button testPrintingAll;
     private JSONObject allJsonObject;
 
@@ -91,9 +92,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnPrintText = findViewById(R.id.btnPrintText);
         btnStatus = findViewById(R.id.btnStatus);
         btnCommand = findViewById(R.id.btnCommand);
+        btnBarcode = findViewById(R.id.testPrintBarcode);
         testPrintingAll = findViewById(R.id.testPrintingAll);
 
         btnDiscover.setOnClickListener(this);
+        btnBarcode.setOnClickListener(this);
         btnPrintImage.setOnClickListener(this);
         btnPrintText.setOnClickListener(this);
         btnStatus.setOnClickListener(this);
@@ -261,28 +264,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     jsonObject.put("alignment", "Center");
                     jsonObject.put("paperSize", "" + paperSize);
 
-                    AndroidNetworking.post(url)
-//                        .addBodyParameter("printerID", printerID)
-//                        .addBodyParameter("image", base64Image)
-//                        .addBodyParameter("alignment", "Center")
-//                        .addBodyParameter("paperSize", "" + paperSize)
-                            .addJSONObjectBody(jsonObject)
-                            .setTag(this)
-                            .setPriority(Priority.HIGH)
-                            .build()
-                            .getAsString(new StringRequestListener() {
-                                @Override
-                                public void onResponse(String response) {
-                                    updateButtonState(true);
-                                    txtResult.setText(url + "\nResponse: " + response);
-                                }
-
-                                @Override
-                                public void onError(ANError anError) {
-                                    updateButtonState(true);
-                                    txtResult.setText(anError.toString());
-                                }
-                            });
+                    makeAnApiCall(url, jsonObject, "\nResponse: ");
                 }
 
             } catch (Exception e) {
@@ -452,36 +434,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     e.printStackTrace();
                 }
 
-                AndroidNetworking.post(uri)
-//                        .addBodyParameter("printerID", printerID)
-//                        .addBodyParameter("text", "After reinstall you can again write files to that directory for which you do not need any permission.")
-//                        .addBodyParameter("fontSize", fontSize)
-//                        .addBodyParameter("paperSize", "" + paperSize)
-//                        .addBodyParameter("bold", "" + bold)
-//                        .addBodyParameter("underline", "" + underline)
-//                        .addBodyParameter("italic", "" + italic)
-//                        .addBodyParameter("strike", "" + strike)
-//                        .addBodyParameter("invert", "" + invert)
-//                        .addBodyParameter("align", align)
-                        .addJSONObjectBody(jsonObject)
-                        .setTag(this)
-                        .setPriority(Priority.HIGH)
-                        .build()
-                        .getAsString(new StringRequestListener() {
-                            @Override
-                            public void onResponse(String response) {
-                                updateButtonState(true);
-                                txtResult.setText(uri + "\n" + response);
-                            }
+                makeAnApiCall(uri, jsonObject, "\n");
 
-                            @Override
-                            public void onError(ANError anError) {
-                                updateButtonState(true);
-                                txtResult.setText(anError.toString());
-                            }
-                        });
+            } else if (id == R.id.testPrintBarcode) {
+                String uri = SERVER_URL + "printAndroid";
+                updateButtonState(false);
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put(Constants.PRINTER_DATA, printerID);
+                    jsonObject.put("typeEnum", 3);
+                    jsonObject.put("value", "3652147896");
+                    jsonObject.put(Constants.BARCODE_FONT, 0);
+                    jsonObject.put(Constants.BARCODE_HEIGHT, 255);
+                    jsonObject.put(Constants.BARCODE_HRI, 2);
+                    jsonObject.put(Constants.BARCODE_WIDTH, 6);
+                    jsonObject.put(Constants.BARCODE_TYPE, 10);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-            } else if (id == R.id.btnStatus) {
+                makeAnApiCall(uri, jsonObject, "\n");
+            }else if (id == R.id.btnStatus) {
                 updateButtonState(false);
                 String uri = SERVER_URL + "getPrinterStatus";
                 JSONObject jsonObject = new JSONObject();
@@ -490,25 +463,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                AndroidNetworking.post(uri)
-//                        .addBodyParameter("printerID", printerID)
-                        .addJSONObjectBody(jsonObject)
-                        .setTag(this)
-                        .setPriority(Priority.HIGH)
-                        .build()
-                        .getAsString(new StringRequestListener() {
-                            @Override
-                            public void onResponse(String response) {
-                                updateButtonState(true);
-                                txtResult.setText(uri + "\n" + response);
-                            }
-
-                            @Override
-                            public void onError(ANError anError) {
-                                updateButtonState(true);
-                                txtResult.setText(anError.toString());
-                            }
-                        });
+                makeAnApiCall(uri, jsonObject, "\n");
             } else if (id == R.id.btnCommand) {
                 boolean lineFeed = chkLineFeed.isChecked();
                 boolean cutPaper = chkCutPaper.isChecked();
@@ -525,27 +480,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                AndroidNetworking.post(uri)
-//                        .addBodyParameter("printerID", printerID)
-//                        .addBodyParameter("lineFeed", "" + lineFeed)
-//                        .addBodyParameter("cutPaper", "" + cutPaper)
-                        .addJSONObjectBody(jsonObject)
-                        .setTag(this)
-                        .setPriority(Priority.HIGH)
-                        .build()
-                        .getAsString(new StringRequestListener() {
-                            @Override
-                            public void onResponse(String response) {
-                                updateButtonState(true);
-                                txtResult.setText(uri + "\n" + response);
-                            }
-
-                            @Override
-                            public void onError(ANError anError) {
-                                updateButtonState(true);
-                                txtResult.setText(anError.toString());
-                            }
-                        });
+                makeAnApiCall(uri, jsonObject, "\n");
             }else if (id == R.id.testPrintingAll){
                 Intent getFile = new Intent(Intent.ACTION_GET_CONTENT);
                 getFile.setType("image/*");
@@ -554,11 +489,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private void makeAnApiCall(String uri, JSONObject jsonObject, String s) {
+        AndroidNetworking.post(uri)
+//                        .addBodyParameter("printerID", printerID)
+                .addJSONObjectBody(jsonObject)
+                .setTag(this)
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsString(new StringRequestListener() {
+                    @Override
+                    public void onResponse(String response) {
+                        updateButtonState(true);
+                        txtResult.setText(uri + s + response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        updateButtonState(true);
+                        txtResult.setText(anError.toString());
+                    }
+                });
+    }
+
     private void updateButtonState(boolean enabled){
         btnDiscover.setEnabled(enabled);
         btnPrintImage.setEnabled(enabled);
         btnPrintText.setEnabled(enabled);
         btnStatus.setEnabled(enabled);
         btnCommand.setEnabled(enabled);
+        btnBarcode.setEnabled(enabled);
     }
 }

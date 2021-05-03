@@ -237,6 +237,13 @@
                 android:text="NEW- Androidprint All"
                 android:textAllCaps="false" />
 
+            <Button
+                android:id="@+id/testPrintBarcode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Print Barcode"
+                android:textAllCaps="false" />
+
         </LinearLayout>
 
         <LinearLayout
