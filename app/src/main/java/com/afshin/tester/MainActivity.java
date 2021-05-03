@@ -438,6 +438,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             } else if (id == R.id.testPrintBarcode) {
                 String uri = SERVER_URL + "printAndroid";
+                JSONArray jsonArray = new JSONArray();
+
                 updateButtonState(false);
                 JSONObject jsonObject = new JSONObject();
                 try {
@@ -449,11 +451,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     jsonObject.put(Constants.BARCODE_HRI, 2);
                     jsonObject.put(Constants.BARCODE_WIDTH, 6);
                     jsonObject.put(Constants.BARCODE_TYPE, 10);
+
+                    jsonArray.put(jsonObject);
+
+                    allJsonObject.put("Data", jsonArray);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                makeAnApiCall(uri, jsonObject, "\n");
+                makeAnApiCall(uri, allJsonObject, "\n");
             }else if (id == R.id.btnStatus) {
                 updateButtonState(false);
                 String uri = SERVER_URL + "getPrinterStatus";
