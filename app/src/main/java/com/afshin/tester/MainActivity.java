@@ -3,12 +3,10 @@ package com.afshin.tester;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -213,6 +211,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     textObject.put("align", 0);
 
                     jsonArray.put(textObject);
+
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("typeEnum", 3);
+                    jsonObject.put("value", "3652147896");
+                    jsonObject.put(Constants.BARCODE_FONT, 0);
+                    jsonObject.put(Constants.BARCODE_HEIGHT, 255);
+                    jsonObject.put(Constants.BARCODE_HRI, 2);
+                    jsonObject.put(Constants.BARCODE_WIDTH, 6);
+                    jsonObject.put(Constants.BARCODE_TYPE, 10);
+
+                    jsonArray.put(jsonObject);
 
 
                     boolean lineFeed = chkLineFeed.isChecked();
