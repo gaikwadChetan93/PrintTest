@@ -215,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("typeEnum", 3);
                     jsonObject.put("value", "3652147896");
+                    jsonObject.put("paperSize", paperSize);
                     jsonObject.put(Constants.BARCODE_FONT, 0);
                     jsonObject.put(Constants.BARCODE_HEIGHT, 255);
                     jsonObject.put(Constants.BARCODE_HRI, 2);
