@@ -35,6 +35,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String SERVER_URL = "http://localhost:8080/";
@@ -313,63 +314,75 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (id == R.id.btnDiscover) {
 
             JSONObject jsonObject = new JSONObject();
+            JSONArray jsonArray = new JSONArray();
+
             try {
                 if (edtDiscoverType.getText().toString().isEmpty()){
-                    jsonObject.put(Constants.PRINTER_TO_DISCOVER, "0");
+                    JSONObject jo = new JSONObject();
+                    jo.put(Constants.PRINTER_ID, 0);
+                    jsonArray.put(jo);
                 } else {
-                    jsonObject.put(Constants.PRINTER_TO_DISCOVER, edtDiscoverType.getText().toString());
+                    String[] printer = edtDiscoverType.getText().toString().split(",");
+                    for (String s : printer) {
+                        JSONObject jo = new JSONObject();
+                        jo.put(Constants.PRINTER_ID, Integer.parseInt(s));
+                        jsonArray.put(jo);
+                    }
                 }
+                jsonObject.put(Constants.PRINTER_TO_DISCOVER, jsonArray);
+
+                updateButtonState(false);
+                String uri = SERVER_URL + "discoverPrinters";
+                AndroidNetworking.post(uri)
+                        .setTag(this)
+                        .setPriority(Priority.HIGH)
+                        .addJSONObjectBody(jsonObject)
+                        .build()
+                        .getAsString(new StringRequestListener() {
+                            @Override
+                            public void onResponse(String response) {
+                                updateButtonState(true);
+                                txtResult.setText(uri + "\n" + response);
+                                try {
+                                    JSONObject json = new JSONObject(response);
+                                    JSONArray printers = json.getJSONArray("connectedPrinters");
+
+                                    int count = printers.length();
+                                    if (count > 0) {
+                                        String[] ids = new String[count];
+                                        for (int index = 0; index < count; index++) {
+                                            JSONObject printer = printers.optJSONObject(index);
+                                            String printerID = printer.getString(Constants.PRINTER_DATA);
+                                            ids[index] = printerID;
+                                        }
+
+                                        ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, ids);
+                                        spnPrinterIds.setAdapter(adapter);
+                                    } else {
+//                                    String[] ids = {"Epson-Printer-Fake","Star-Printer-Fake"};
+                                        String[] ids = {"No Printers Found"};
+                                        ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, ids);
+                                        spnPrinterIds.setAdapter(adapter);
+                                    }
+
+                                } catch (JSONException e) {
+                                    updateButtonState(true);
+                                    e.printStackTrace();
+                                    txtResult.setText(e.getMessage());
+                                }
+                            }
+
+                            @Override
+                            public void onError(ANError anError) {
+                                updateButtonState(true);
+                                txtResult.setText(anError.toString());
+                            }
+                        });
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            updateButtonState(false);
-            String uri = SERVER_URL + "discoverPrinters";
-            AndroidNetworking.post(uri)
-                    .setTag(this)
-                    .setPriority(Priority.HIGH)
-                    .addJSONObjectBody(jsonObject)
-                    .build()
-                    .getAsString(new StringRequestListener() {
-                        @Override
-                        public void onResponse(String response) {
-                            updateButtonState(true);
-                            txtResult.setText(uri + "\n" + response);
-                            try {
-                                JSONObject json = new JSONObject(response);
-                                JSONArray printers = json.getJSONArray("connectedPrinters");
 
-                                int count = printers.length();
-                                if (count > 0) {
-                                    String[] ids = new String[count];
-                                    for (int index = 0; index < count; index++) {
-                                        JSONObject printer = printers.optJSONObject(index);
-                                        String printerID = printer.getString(Constants.PRINTER_DATA);
-                                        ids[index] = printerID;
-                                    }
-
-                                    ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, ids);
-                                    spnPrinterIds.setAdapter(adapter);
-                                } else {
-//                                    String[] ids = {"Epson-Printer-Fake","Star-Printer-Fake"};
-                                    String[] ids = {"No Printers Found"};
-                                    ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, ids);
-                                    spnPrinterIds.setAdapter(adapter);
-                                }
-
-                            } catch (JSONException e) {
-                                updateButtonState(true);
-                                e.printStackTrace();
-                                txtResult.setText(e.getMessage());
-                            }
-                        }
-
-                        @Override
-                        public void onError(ANError anError) {
-                            updateButtonState(true);
-                            txtResult.setText(anError.toString());
-                        }
-                    });
         } else {
             if (printerID == null || printerID.isEmpty()) {
 
