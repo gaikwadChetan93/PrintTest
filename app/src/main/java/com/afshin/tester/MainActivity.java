@@ -324,9 +324,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     String[] printer = edtDiscoverType.getText().toString().split(",");
                     for (String s : printer) {
-                        JSONObject jo = new JSONObject();
-                        jo.put(Constants.PRINTER_ID, Integer.parseInt(s));
-                        jsonArray.put(jo);
+                        jsonArray.put(Integer.parseInt(s));
                     }
                 }
                 jsonObject.put(Constants.PRINTER_TO_DISCOVER, jsonArray);
