@@ -409,36 +409,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else if (radioButtonID == R.id.radJustify) {
                     align = "Justify";
                 }
-
-
-//                if (collectAll.isChecked()){
-//                    try {
-//                        if (!allJsonObject.has("printerID")){
-//                            allJsonObject.put("printerID", printerID);
-//                        }
-//
-//                        if (!allJsonObject.has("paperSize")){
-//                            allJsonObject.put("paperSize", "" + paperSize);
-//                        }
-//
-//                        allJsonObject.put("text", "After reinstall you can again write files to that directory for which you do not need any permission.");
-//                        allJsonObject.put("fontSize", fontSize);
-//                        allJsonObject.put("bold", "" + bold);
-//                        allJsonObject.put("underline", "" + underline);
-//                        allJsonObject.put("italic", "" + italic);
-//                        allJsonObject.put("strike", "" + strike);
-//                        allJsonObject.put("invert", "" + invert);
-//                        allJsonObject.put("align", align);
-//
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                    return;
-//                }
-
                 String uri = SERVER_URL + "printAndroid";
                 updateButtonState(false);
+                JSONArray jsonArray = new JSONArray();
                 JSONObject jsonObject = new JSONObject();
                 try {
                     jsonObject.put(Constants.PRINTER_DATA, printerID);
@@ -451,11 +424,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     jsonObject.put("strike", "" + strike);
                     jsonObject.put("invert", "" + invert);
                     jsonObject.put("align", align);
+                    jsonArray.put(jsonObject);
+
+                    allJsonObject.put("Data", jsonArray);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                makeAnApiCall(uri, jsonObject, "\n");
+                makeAnApiCall(uri, allJsonObject, "\n");
 
             } else if (id == R.id.testPrintBarcode) {
                 String uri = SERVER_URL + "printAndroid";
