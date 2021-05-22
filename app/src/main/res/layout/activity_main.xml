@@ -235,6 +235,12 @@
                 android:text="NEW- Androidprint All"
                 android:textAllCaps="false" />
 
+            <EditText
+                android:id="@+id/edtBarcodeData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Barcode data" />
+
             <Button
                 android:id="@+id/testPrintBarcode"
                 android:layout_width="match_parent"

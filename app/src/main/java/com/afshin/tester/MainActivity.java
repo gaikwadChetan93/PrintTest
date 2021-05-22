@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Spinner spnPaperSize;
     EditText edtFontSize;
     EditText edtDiscoverType;
+    EditText edtBarcodeData;
     CheckBox chkBold;
     CheckBox chkItalic;
     CheckBox chkUnderline;
@@ -107,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         spnPaperSize = findViewById(R.id.spnPaperSize);
         edtFontSize = findViewById(R.id.edtFontSize);
         edtDiscoverType = findViewById(R.id.edtDiscoverType);
+        edtBarcodeData = findViewById(R.id.edtBarcodeData);
         chkBold = findViewById(R.id.chkBold);
         chkUnderline = findViewById(R.id.chkUnderline);
         chkItalic = findViewById(R.id.chkItalic);
@@ -215,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("typeEnum", 3);
-                    jsonObject.put("value", "36521478963652147896");
+                    jsonObject.put("value", edtBarcodeData.getText().toString());
                     jsonObject.put("paperSize", paperSize);
                     jsonObject.put(Constants.BARCODE_FONT, 0);
                     jsonObject.put(Constants.BARCODE_HEIGHT, 255);
@@ -401,13 +403,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 boolean strike = chkStrike.isChecked();
                 boolean invert = chkInvert.isChecked();
                 int radioButtonID = radioGroup.getCheckedRadioButtonId();
-                String align = "Center";
+                int align = 0;
                 if (radioButtonID == R.id.radLeft) {
-                    align = "Left";
+                    align = 1;
                 } else if (radioButtonID == R.id.radRight) {
-                    align = "Right";
+                    align = 2;
                 } else if (radioButtonID == R.id.radJustify) {
-                    align = "Justify";
+                    align = 0;
                 }
                 String uri = SERVER_URL + "printAndroid";
                 updateButtonState(false);
@@ -425,7 +427,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     jsonObject.put("italic", "" + italic);
                     jsonObject.put("strike", "" + strike);
                     jsonObject.put("invert", "" + invert);
-                    jsonObject.put("align", 0);
+                    jsonObject.put("align", align);
                     jsonArray.put(jsonObject);
 
                     allJsonObject.put("Data", jsonArray);
@@ -442,9 +444,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 updateButtonState(false);
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    jsonObject.put(Constants.PRINTER_DATA, printerID);
+                    allJsonObject.put(Constants.PRINTER_DATA, printerID);
                     jsonObject.put("typeEnum", 3);
-                    jsonObject.put("value", "3652147896");
+                    jsonObject.put("value", edtBarcodeData.getText().toString());
                     jsonObject.put(Constants.BARCODE_FONT, 0);
                     jsonObject.put(Constants.BARCODE_HEIGHT, 255);
                     jsonObject.put(Constants.BARCODE_HRI, 2);
