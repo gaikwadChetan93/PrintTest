@@ -417,6 +417,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     allJsonObject.put(Constants.PRINTER_DATA, printerID);
                     jsonObject.put("typeEnum", 1);
                     jsonObject.put("text", "After reinstall you can again write files to that directory for which you do not need any permission.");
+                    jsonObject.put("value", "After reinstall you can again write files to that directory for which you do not need any permission.");
                     jsonObject.put("fontSize", fontSize);
                     jsonObject.put("paperSize", "" + paperSize);
                     jsonObject.put("bold", "" + bold);
