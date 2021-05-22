@@ -425,7 +425,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     jsonObject.put("italic", "" + italic);
                     jsonObject.put("strike", "" + strike);
                     jsonObject.put("invert", "" + invert);
-                    jsonObject.put("align", align);
+                    jsonObject.put("align", 0);
                     jsonArray.put(jsonObject);
 
                     allJsonObject.put("Data", jsonArray);
