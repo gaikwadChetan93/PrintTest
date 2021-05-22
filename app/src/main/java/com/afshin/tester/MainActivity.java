@@ -447,6 +447,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     allJsonObject.put(Constants.PRINTER_DATA, printerID);
                     jsonObject.put("typeEnum", 3);
                     jsonObject.put("value", edtBarcodeData.getText().toString());
+                    jsonObject.put("paperSize", "" + paperSize);
                     jsonObject.put(Constants.BARCODE_FONT, 0);
                     jsonObject.put(Constants.BARCODE_HEIGHT, 255);
                     jsonObject.put(Constants.BARCODE_HRI, 2);
